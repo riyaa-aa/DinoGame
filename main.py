@@ -118,13 +118,25 @@ class Cloud:
         SCREEN.blit(self.image, (self.x, self.y))
 
 def main():
-    global game_speed
+    global game_speed, x_pos_bg, y_pos_bg
     run = True
     clock = pygame.time.Clock()
     player = Dinosaur()
     game_speed = 14
     cloud = Cloud()
+    x_pos_bg = 0
+    y_pos_bg = 380
 
+    def background():
+        global x_pos_bg, y_pos_bg
+        image_width = BG.get_width()
+        SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
+        SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+        if x_pos_bg <= -image_width:
+            SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+            x_pos_bg = 0
+        x_pos_bg -= game_speed
+    
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -138,6 +150,8 @@ def main():
 
         cloud.draw(SCREEN)
         cloud.update()
+
+        background()
 
         clock.tick(30)
         pygame.display.update()
